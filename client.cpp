@@ -5,15 +5,15 @@
 #include <stdarg.h>
 #include <pthread.h>
 
-#include "utils.cpp"
+#include "packet.h"
 
-#define BUFFER_SIZE 50000
+#define BUFFER_SIZE 65536
 
 int client_fd;
 
 int main(int argc, char **argv) {
     int SERVER_PORT = 4000;
-    const char* server_ip = "dili.eecs.umich.edu";
+    const char* server_ip = "141.212.108.160";
 
     // initialize server address
     struct sockaddr_in server_addr;
@@ -42,5 +42,10 @@ int main(int argc, char **argv) {
     recvfrom(client_fd, recv_data, BUFFER_SIZE, 0, (struct sockaddr *) &server_addr, &server_addr_len);
     sendto(client_fd, "Test2_ACK\n", strlen("Test2_ACK\n"), 0, (struct sockaddr *) &server_addr, server_addr_len);
     Log("Communication established with server...");
+
+    // receive custom messages
+    connect_socket_to_address(client_fd, (struct sockaddr *) &server_addr, server_addr_len);
+    received_datagram message = recv_packet(client_fd);
+    Log("Custom message received");
 
 }

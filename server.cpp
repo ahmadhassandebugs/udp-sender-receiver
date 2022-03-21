@@ -3,9 +3,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "utils.cpp"
+#include "packet.h"
 
-#define BUFFER_SIZE 50000
+#define BUFFER_SIZE 65536
 
 int main(int argc, char **argv) {
     int LISTEN_PORT = 4000;
@@ -43,7 +43,11 @@ int main(int argc, char **argv) {
 
     // print client address
     char address_str[INET_ADDRSTRLEN];
-    // inet_ntop(AF_INET, &(client_addr.sin_addr), address_str, INET_ADDRSTRLEN);
     Log("Communication established with client: %s", get_ip_str((struct sockaddr *) &client_addr, address_str, INET_ADDRSTRLEN));
 
+    int seq_no = 0;
+    // send custom messages
+    std::string message = create_packet(seq_no++);
+    send_packet(listen_fd, (struct sockaddr *) &client_addr, client_addr_len, message);
+    Log("Custom message sent");
 }
