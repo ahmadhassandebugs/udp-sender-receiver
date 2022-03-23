@@ -52,6 +52,9 @@ struct Packet
     /* Make wire representation  of datagram */
     std::string to_string() const;
 
+    /* Make human-readable representation of header */
+    std::string get_string() const;
+
     /* Transform into an ack of the datagram */
     void transform_into_ack(uint64_t sequence_number,
                             uint64_t recv_timestamp);

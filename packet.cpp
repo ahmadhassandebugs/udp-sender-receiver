@@ -54,6 +54,20 @@ string Packet::Header::to_string() const
             put_header_filed(ack_recv_timestamp) + put_header_filed(ack_payload_length);
 }
 
+/* Make human-readable representation of header */
+string Packet::get_string() const
+{   
+    // IS_ACK, PKT_SEQ_NO, PKT_SEND_TIME, ACK_NO, ACK_SEND_TIME, PKT_RECV_TIME, PKT_LEN
+    return string_format("%d, %d, %d, %d, %d, %d, %d", 
+                         is_ack(), 
+                         header.sequence_number, 
+                         header.send_timestamp, 
+                         header.ack_sequence_number, 
+                         header.ack_send_timestamp, 
+                         header.ack_recv_timestamp, 
+                         header.ack_payload_length);
+}
+
 /* Make wire representation of packet */
 string Packet::to_string() const
 {
@@ -102,7 +116,7 @@ bool Packet::is_ack() const
 std::string create_packet(uint64_t seq_num) 
 {
     /* all messages use the same dummy payload */
-    static const std::string dummy_payload(1200, 'x');
+    static const std::string dummy_payload(1424, 'x');
     Packet packet(seq_num, dummy_payload);
     packet.set_send_timestamp();  // send immediately
     return packet.to_string();
@@ -175,6 +189,7 @@ received_datagram recv_packet(const int socket_fd)
         if(ts_hdr->cmsg_level == SOL_SOCKET and ts_hdr->cmsg_type == SO_TIMESTAMPNS) {
             const timespec* const kernel_time = reinterpret_cast<timespec*>(CMSG_DATA(ts_hdr));
             timestamp = timestamp_ms(*kernel_time);
+            // timestamp = timestamp_ms_raw(*kernel_time);
         }
         ts_hdr = CMSG_NXTHDR(&header, ts_hdr);
     }

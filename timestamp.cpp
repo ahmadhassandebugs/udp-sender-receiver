@@ -11,7 +11,6 @@ static const uint64_t BILLION = 1000 * MILLION;
 static timespec current_time()
 {
     timespec ret{};
-//    zero(ret);
     SystemCall("clock_gettime", clock_gettime(CLOCK_REALTIME, &ret));
     return ret;
 }

@@ -33,6 +33,7 @@ int main(int argc, char **argv) {
         Error("Socket creation error"); // replace with android logging
         pthread_exit(NULL);
     }
+    set_timestamps(client_fd);
 
     // send first packet to server and wait for 2 packets to establish communication
     Log("Sending message to the server");
@@ -43,9 +44,20 @@ int main(int argc, char **argv) {
     sendto(client_fd, "Test2_ACK\n", strlen("Test2_ACK\n"), 0, (struct sockaddr *) &server_addr, server_addr_len);
     Log("Communication established with server...");
 
+    int client_seq_no = 1;
     // receive custom messages
     connect_socket_to_address(client_fd, (struct sockaddr *) &server_addr, server_addr_len);
     received_datagram message = recv_packet(client_fd);
-    Log("Custom message received");
-
+    Packet packet = message.payload;
+    Log("Custom message received ==> %d, %d, %d, %d, %d, %d, %d", 
+                         packet.is_ack(), 
+                         packet.header.sequence_number, 
+                         packet.header.send_timestamp, 
+                         packet.header.ack_sequence_number, 
+                         packet.header.ack_send_timestamp, 
+                         packet.header.ack_recv_timestamp, 
+                         packet.header.ack_payload_length);
+    packet.transform_into_ack(client_seq_no++, message.timestamp);
+    packet.set_send_timestamp();
+    send_packet(client_fd, (struct sockaddr *) &server_addr, server_addr_len, packet.to_string());
 }
