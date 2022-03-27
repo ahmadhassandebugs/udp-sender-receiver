@@ -9,6 +9,7 @@
 
 #include "utils.h"
 #include "timestamp.h"
+#include "config.h"
 
 struct received_datagram {
     struct sockaddr_in source_address;

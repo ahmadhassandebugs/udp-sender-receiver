@@ -130,7 +130,14 @@ inline void connect_socket_to_address(const int fd, const struct sockaddr *sa, s
     SystemCall("connect", connect(fd, sa, len));
 }
 
-
+/* set socket timeout for receiving packets */
+inline void set_socket_timeout(const int fd, uint64_t timeout_in_seconds) 
+{
+    struct timeval tv;
+    tv.tv_sec = timeout_in_seconds;
+    tv.tv_usec = 0;
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+}
 
 inline std::string string_format(const std::string fmt_str, ...) {
     int final_n, n = ((int)fmt_str.size()) * 2; /* Reserve two times as much as the length of the fmt_str */

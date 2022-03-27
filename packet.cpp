@@ -1,7 +1,6 @@
 #include "packet.h"
 
 #include <utility>
-#include "timestamp.h"
 
 using namespace std;
 
@@ -116,7 +115,7 @@ bool Packet::is_ack() const
 std::string create_packet(uint64_t seq_num) 
 {
     /* all messages use the same dummy payload */
-    static const std::string dummy_payload(1424, 'x');
+    static const std::string dummy_payload(PKT_PAYLOAD_LEN, 'x');
     Packet packet(seq_num, dummy_payload);
     packet.set_send_timestamp();  // send immediately
     return packet.to_string();
@@ -147,15 +146,13 @@ int receive_bytes(const int socket_fd, const struct sockaddr *peer,
 /* receive datagram and where it came from */
 received_datagram recv_packet(const int socket_fd)
 {
-    static const ssize_t RECEIVE_MTU = 65536;
-
     /* receive source address, timestamp and payload */
      struct sockaddr_in datagram_source_address;
     msghdr header{}; zero(header);
     iovec msg_iovec{}; zero(msg_iovec);
 
-    char msg_payload[RECEIVE_MTU];
-    char msg_control[RECEIVE_MTU];
+    char msg_payload[RECV_BUFFER_LEN];
+    char msg_control[RECV_BUFFER_LEN];
 
     /* prepare to get the source address */
     header.msg_name = &datagram_source_address;
@@ -172,7 +169,12 @@ received_datagram recv_packet(const int socket_fd)
     header.msg_controllen = sizeof(msg_control);
 
     /* call recvmsg */
-    ssize_t recv_len = SystemCall("recvmsg", recvmsg(socket_fd, &header, 0));
+    // ssize_t recv_len = SystemCall("recvmsg", recvmsg(socket_fd, &header, 0));
+    ssize_t recv_len = recvmsg(socket_fd, &header, 0);
+    if (recv_len == -1 and errno == EAGAIN) {
+        std::cerr << "recvmsg timeout\n";
+        pthread_exit(NULL);
+    }
 
     /* make sure we got the whole datagram */
     if (header.msg_flags & MSG_TRUNC) {
