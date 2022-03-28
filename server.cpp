@@ -65,22 +65,24 @@ void *recv_udp_packets(void* fd_ptr)
         received_datagram recv_message = recv_packet(socket_fd); // this will exit the thread if timeout
         Packet packet = recv_message.payload;
         if (DEBUG) {
-                Log("Custom message received ==> %d, %d, %d, %d, %d, %d, %d", 
+                Log("Custom message received ==> %d, %d, %d, %d, %d, %d, %d, %d", 
                             packet.is_ack(), 
                             packet.header.sequence_number, 
                             packet.header.send_timestamp, 
                             packet.header.ack_sequence_number, 
                             packet.header.ack_send_timestamp, 
                             packet.header.ack_recv_timestamp, 
+                            recv_message.timestamp,
                             packet.header.ack_payload_length);
         }
-        std::string packet_info = string_format("%d, %d, %d, %d, %d, %d, %d\n", 
-                                                packet.is_ack(), 
+        std::string packet_info = string_format("%d, %d, %d, %d, %d, %d, %d, %d\n", 
+                                                packet.is_ack(),
                                                 packet.header.sequence_number, 
                                                 packet.header.send_timestamp, 
                                                 packet.header.ack_sequence_number, 
                                                 packet.header.ack_send_timestamp, 
-                                                packet.header.ack_recv_timestamp, 
+                                                packet.header.ack_recv_timestamp,
+                                                recv_message.timestamp,
                                                 packet.header.ack_payload_length);
         log_file_handler << packet_info;
     }
