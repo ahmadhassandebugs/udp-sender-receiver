@@ -106,8 +106,7 @@ int run_server(int listen_port, const char* log_file_name, double sending_rate_m
         milliseconds_to_sleep = std::max(1, int(pkt_interval_ms / 0.001));
         pkts_to_send = 1;
     }
-    if (DEBUG)
-        Log("pkts interval ms %f sleep time %d ; pkts to send %d", pkt_interval_ms, milliseconds_to_sleep, pkts_to_send);
+    Log("pkts interval ms %f; sleep time %d; pkts to send %d", pkt_interval_ms, milliseconds_to_sleep, pkts_to_send);
 
     // initialize signal handler and open log file
     signal(SIGINT, signalHandler);
