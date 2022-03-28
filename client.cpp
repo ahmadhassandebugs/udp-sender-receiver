@@ -13,7 +13,7 @@
 int client_fd;
 std::ofstream log_file_handler;
 
-bool DEBUG = true;
+bool DEBUG = false;
 
 void signalHandler(int signum) {
     shutdown(client_fd, SHUT_RDWR);
@@ -21,10 +21,7 @@ void signalHandler(int signum) {
     exit(signum);
 }
 
-int main(int argc, char **argv) {
-    int SERVER_PORT = 4000;
-    const char* server_ip = "141.212.108.160";
-    const char* log_file_name = "client.csv";
+int run_client(const char* server_ip, int server_port, const char* log_file_name) {
 
     signal(SIGINT, signalHandler);
 
@@ -34,7 +31,7 @@ int main(int argc, char **argv) {
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(struct sockaddr_in));
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_port = htons(server_port);
     if (inet_pton(AF_INET, server_ip, &server_addr.sin_addr) <= 0) {
         Log("Invalid address or address not supported");
         pthread_exit(NULL);
@@ -58,8 +55,7 @@ int main(int argc, char **argv) {
     recvfrom(client_fd, recv_data, RECV_BUFFER_LEN, 0, (struct sockaddr *) &server_addr, &server_addr_len);
     recvfrom(client_fd, recv_data, RECV_BUFFER_LEN, 0, (struct sockaddr *) &server_addr, &server_addr_len);
     sendto(client_fd, "Test2_ACK\n", strlen("Test2_ACK\n"), 0, (struct sockaddr *) &server_addr, server_addr_len);
-    if (DEBUG)
-        Log("Communication established with server...");
+    Log("Communication established with server...");
 
     int client_seq_no = 1;
     // connect socket to the server address
@@ -99,4 +95,16 @@ int main(int argc, char **argv) {
     log_file_handler.close();
 
     return 1;
+}
+
+int main(int argc, char** argv) {
+    if (argc == 4) {
+        char* server_ip = argv[1];
+        int server_port = std::atoi(argv[2]);
+        char* log_file_name = argv[3];
+        return run_client(server_ip, server_port, log_file_name);
+    }
+    else {
+        return 0;
+    }
 }
