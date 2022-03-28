@@ -46,8 +46,12 @@ void *send_udp_packets(void* fd_ptr)
         count = 0;
     }
     std::string message = create_packet(0);
+    // send three times just in case
     send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);
-    send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);  // send two times just in case
+    send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);
+    send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);
+    send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);
+    send_packet(socket_fd, (struct sockaddr *) &client_addr, sizeof(client_addr), message);
     if (DEBUG)
         Log("Last Custom message sent");
     SERVER_RUNNING = false;
