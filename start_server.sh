@@ -1,11 +1,11 @@
-if [ $# -ne 4 ]
+if [ $# -ne 5 ]
 then
-    echo "Error: Usage ./start_server PORT LOGFILE SENDING_RATE DURATION"
+    echo "Error: Usage ./start_server PORT LOGFILE SENDING_RATE DURATION LOGPATH"
     exit
 fi
 
 port=$1
-logfile=$2
+logfile="$5/$2"
 rate=$3
 duration=$4
 
