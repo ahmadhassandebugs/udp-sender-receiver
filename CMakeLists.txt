@@ -14,5 +14,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 set(sources timestamp.cpp packet.cpp)
 
 # add executables
-add_executable(client ${sources} client.cpp)
-add_executable(server ${sources} server.cpp)
+add_executable(custom_udp_client ${sources} client.cpp)
+add_executable(custom_udp_server ${sources} server.cpp)
