@@ -7,6 +7,6 @@ const uint16_t SERVER_RECV_MSG_TIMEOUT = 2; // in secs
 const double BITS_PER_BYTE = 8.0;
 const double KILO = 1024.0;
 const double MEGA = KILO * KILO;
-const double DEF_PKT_INTERVAL_MS = ((double)PKT_PAYLOAD_LEN * BITS_PER_BYTE) / MEGA;
+const double SENDING_RATE_CONST = (MEGA / BITS_PER_BYTE) / ((double)PKT_PAYLOAD_LEN * 1000.0);  // pkts per ms
 
 #endif //UDP_CONFIG_H

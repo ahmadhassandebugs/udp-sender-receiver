@@ -94,19 +94,18 @@ void *recv_udp_packets(void* fd_ptr)
 
 int run_server(int listen_port, const char* log_file_name, double sending_rate_mbps, int time_to_run) {
     duration = time_to_run;  // in ms
+    double pkts_per_ms = sending_rate_mbps * SENDING_RATE_CONST;
 
-    // calculate packet interval for given sending rate
-    double pkts_interval_sec = DEF_PKT_INTERVAL_MS / sending_rate_mbps;
-    double pkt_interval_ms = pkts_interval_sec / 1000.0;
-    if (pkt_interval_ms <= 0.001) { // if sending multiple packets each millisecond
-        milliseconds_to_sleep = 1;
-        pkts_to_send = std::round(0.001 / pkt_interval_ms);
-    }
-    else { // if sending one packet only a few milliseconds
-        milliseconds_to_sleep = std::max(1, int(pkt_interval_ms / 0.001));
+    if ((1.0 / SENDING_RATE_CONST) > sending_rate_mbps) {  // if sending rate < 1 pkt/ms
+        milliseconds_to_sleep = std::max(1, int(std::round(1.0 / pkts_per_ms)));
         pkts_to_send = 1;
     }
-    Log("pkts interval ms %f; sleep time %d; pkts to send %d", pkt_interval_ms, milliseconds_to_sleep, pkts_to_send);
+    else {  // if sending rate >= 1 pkt/ms
+        milliseconds_to_sleep = 1;
+        pkts_to_send = std::max(1, int(std::round(pkts_per_ms)));
+    }
+
+    Log("sleep time %d; pkts to send %d", milliseconds_to_sleep, pkts_to_send);
 
     // initialize signal handler and open log file
     signal(SIGINT, signalHandler);
