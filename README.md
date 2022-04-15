@@ -1,3 +1,5 @@
+# Commands
+
 ```bash
 sudo apt-get update && sudo apt-get install build-essential cmake
 ```
@@ -21,6 +23,7 @@ cd build && cmake .. && make && cd ..
 ```
 
 Logs format on server:
+
 - is_ack : if packet is an ack or not
 - sequence_number : sequence # of ack (client's)
 - send_timestamp : when client sent ack **client's clock**

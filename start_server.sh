@@ -12,6 +12,6 @@ projectfolder=$5
 
 # compile the server source if not exist
 cd ${projectfolder} && mkdir -p build && cd build && cmake .. && make && cd ..
-kill $(ps aux | grep custom_udp_server | awk '{print $2}') || true
+kill $(lsof -t -i:${port}) || true
 ${projectfolder}/bin/custom_udp_server ${port} ${logfile} ${rate} ${duration} > /dev/null 2>&1 &
 echo "Success"
