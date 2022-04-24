@@ -10,11 +10,11 @@ cd build && cmake .. && make && cd ..
 ```
 
 ```bash
-./custom_udp_server PORT LOG_FILE SENDING_RATE DURATION
+./custom_udp_server PORT LOG_FILE SENDING_RATE DURATION DOWN/UP
 ```
 
 ```bash
-./custom_udp_client IP PORT LOG_FILE
+./custom_udp_client IP PORT LOG_FILE SENDING_RATE DURATION DOWN/UP
 ```
 
 ```bash

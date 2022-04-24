@@ -32,3 +32,8 @@ uint64_t timestamp_ms(const timespec &ts)
     const static uint64_t EPOCH = timestamp_ms_raw(current_time());
     return timestamp_ms_raw(ts) - EPOCH;
 }
+
+uint64_t get_current_timestamp()
+{
+    return timestamp_ms_raw(current_time());
+}
