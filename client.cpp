@@ -17,7 +17,6 @@ std::ofstream log_file_handler;
 
 struct sockaddr_in peer_addr;
 
-int sender_thread, receiver_thread;
 int SENDER_RUNNING = true;
 uint64_t milliseconds_to_sleep, pkts_to_send, duration;
 
@@ -92,7 +91,6 @@ int run_client(const char* server_ip, int server_port, const char* log_file_name
     sendto(client_fd, "Test2_ACK\n", strlen("Test2_ACK\n"), 0, (struct sockaddr *) &peer_addr, sizeof(peer_addr));
     Log("Communication established with server...");
 
-    int client_seq_no = 1;
     // connect socket to the server address
     connect_socket_to_address(client_fd, (struct sockaddr *) &peer_addr, sizeof(peer_addr));
 
