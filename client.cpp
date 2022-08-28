@@ -161,6 +161,11 @@ void recv_packets_and_send_ack(int fd) {
                                                 get_current_timestamp());
         log_file_handler << packet_info;
         if (packet.header.sequence_number <= 0) {
+            Log("Last packet received (exiting)!");
+            break;
+        }
+        if (timestamp_ms() >= duration) {
+            Log("Experiment duration elapsed (exiting)!");
             break;
         }
         packet.transform_into_ack(client_seq_no++, message.timestamp);
