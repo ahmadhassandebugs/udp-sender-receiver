@@ -1,5 +1,17 @@
 # Commands
 
+To start servers:
+```bash
+./netmashup-start-parallel-servers.sh NUM_SERVERS RUN_NUMBER SENDING_RATE DURATION DIRECTION
+./netmashup-start-parallel-servers.sh 3 testing100 2.0 10 DOWN
+```
+
+To stop servers:
+```bash
+./netmashup-stop-parallel-servers.sh
+```
+
+To build:
 ```bash
 sudo apt-get update && sudo apt-get install build-essential cmake
 ```

@@ -179,9 +179,10 @@ void *send_udp_packets(void* fd_ptr)
 {
     int server_seq_no = 1;
     int socket_fd = *((int*) fd_ptr);
+    uint64_t start_time_ms = timestamp_ms();
 
     int count = 0;
-    while (timestamp_ms() <= duration and SENDER_RUNNING) {
+    while ((timestamp_ms() - start_time_ms) <= duration and SENDER_RUNNING) {
         while (count++ < pkts_to_send) {
             // send packets
             std::string message = create_packet(server_seq_no++);

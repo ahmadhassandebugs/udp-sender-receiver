@@ -140,6 +140,7 @@ int main(int argc, char** argv) {
 /* keep receiving packets and send acks (used on receiving side) */
 void recv_packets_and_send_ack(int fd) {
     int client_seq_no = 1;
+    uint64_t start_time_ms = timestamp_ms();
 
     while (true) {
         received_datagram message = recv_packet(fd);
@@ -170,7 +171,7 @@ void recv_packets_and_send_ack(int fd) {
             Log("Last packet received (exiting)!");
             break;
         }
-        if (timestamp_ms() >= duration) {
+        if ((timestamp_ms() - start_time_ms) >= duration) {
             Log("Experiment duration elapsed (exiting)!");
             break;
         }
@@ -185,9 +186,10 @@ void *send_udp_packets(void* fd_ptr)
 {
     int server_seq_no = 1;
     int socket_fd = *((int*) fd_ptr);
+    uint64_t start_time_ms = timestamp_ms();
 
     int count = 0;
-    while (timestamp_ms() <= duration and SENDER_RUNNING) {
+    while ((timestamp_ms() - start_time_ms) <= duration and SENDER_RUNNING) {
         while (count++ < pkts_to_send) {
             // send packets
             std::string message = create_packet(server_seq_no++);
