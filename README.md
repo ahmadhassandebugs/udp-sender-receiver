@@ -20,10 +20,11 @@ sudo apt-get update && sudo apt-get install build-essential cmake
 ```
 For RHEL:
 ```bash
+sudo yum install gcc gcc-c++ kernel-devel make
 wget https://cmake.org/files/v3.12/cmake-3.12.3.tar.gz
 tar zxvf cmake-3.*
 cd cmake-3.*
-./bootstrap --prefix=$HOME/opt/cmake3.12.0
+./bootstrap --prefix=$HOME/opt/cmake3.12.3
 make -j$(nproc)
 make install
 ```
