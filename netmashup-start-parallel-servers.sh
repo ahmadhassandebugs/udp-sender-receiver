@@ -39,8 +39,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 echo "Script Dir: $SCRIPT_DIR"
 
 # compile the server source if not exist
-printf "\n"
-cd $SCRIPT_DIR && mkdir -p build && cd build && cmake .. && make && cd ..
+# printf "\n"
+# cd $SCRIPT_DIR && mkdir -p build && cd build && cmake .. && make && cd ..
 
 # Run netmashup server multiple times
 for i in `seq 1 $num_servers`; do
