@@ -15,6 +15,15 @@ To build:
 ```bash
 sudo apt-get update && sudo apt-get install build-essential cmake
 ```
+For RHEL:
+```bash
+wget https://cmake.org/files/v3.12/cmake-3.12.3.tar.gz
+tar zxvf cmake-3.*
+cd cmake-3.*
+./bootstrap --prefix=/usr/local
+make -j$(nproc)
+make install
+```
 
 ```bash
 mkdir build
